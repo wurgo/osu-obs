@@ -14,6 +14,7 @@ import { track, UsageStatisticsService } from 'services/usage-statistics';
 import { IpcServerService } from 'services/api/ipc-server';
 import { TcpServerService } from 'services/api/tcp-server';
 import { StreamlabelsService } from 'services/streamlabels';
+import { ReactionsService } from 'services/reactions/reactions';
 import { PerformanceService } from 'services/performance';
 import { SceneCollectionsService } from 'services/scene-collections';
 import { FileManagerService } from 'services/file-manager';
@@ -73,6 +74,7 @@ export class AppService extends StatefulService<IAppState> {
   @Inject() scenesService: ScenesService;
   @Inject() videoService: VideoService;
   @Inject() streamlabelsService: StreamlabelsService;
+  @Inject() reactionsService: ReactionsService;
   @Inject() private ipcServerService: IpcServerService;
   @Inject() private tcpServerService: TcpServerService;
   @Inject() private performanceService: PerformanceService;

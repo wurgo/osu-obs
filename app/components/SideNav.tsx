@@ -126,6 +126,15 @@ export default class SideNav extends Vue {
       });
     }
 
+    if (this.userService.isLoggedIn) {
+      pageData.push({
+        target: 'Reactions',
+        icon: 'icon-more',
+        title: $t('Reactions'),
+        trackingTarget: 'reactions-tab',
+      });
+    }
+
     return pageData;
   }
 

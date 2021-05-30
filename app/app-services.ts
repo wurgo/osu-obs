@@ -84,6 +84,7 @@ export { ChatService } from 'services/chat';
 export { RecentEventsService } from 'services/recent-events';
 export { MagicLinkService } from 'services/magic-link';
 export { GrowService } from 'services/grow/grow';
+export { ReactionsService } from 'services/reactions/reactions';
 
 // WIDGETS
 export { WidgetSource, WidgetsService } from './services/widgets';
@@ -130,6 +131,7 @@ import { PatchNotesService } from './services/patch-notes';
 import { VideoService } from './services/video';
 import { ChatService } from './services/chat';
 import { GrowService } from './services/grow/grow';
+import { ReactionsService } from './services/reactions/reactions'
 import { TransitionsService } from './services/transitions';
 import { MagicLinkService } from './services/magic-link';
 import { UsageStatisticsService } from './services/usage-statistics';
@@ -158,6 +160,7 @@ export const AppServices = {
   TwitchService,
   DismissablesService,
   GrowService,
+  ReactionsService,
   TransitionsService,
   MagicLinkService,
   UsageStatisticsService,

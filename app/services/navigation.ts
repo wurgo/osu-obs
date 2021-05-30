@@ -12,6 +12,7 @@ export type TAppPage =
   | 'LayoutEditor'
   | 'PrimeExpiration'
   | 'AlertboxLibrary'
+  | 'Reactions'
   | 'Grow';
 
 interface INavigationState {
