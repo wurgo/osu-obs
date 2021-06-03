@@ -273,6 +273,14 @@ async function startApp() {
   );
   crashHandler.registerProcess(pid, false);
 
+  ipcMain.on('register-in-crash-handler', (event, arg) => {
+    crashHandler.registerProcess(arg.pid, arg.critical);
+  });
+
+  ipcMain.on('unregister-in-crash-handler', (event, arg) => {
+    crashHandler.unregisterProcess(arg.pid);
+  });
+
   const Raven = require('raven');
 
   function handleFinishedReport() {
@@ -762,14 +770,6 @@ ipcMain.on('getAppStartTime', e => {
 
 ipcMain.on('measure-time', (e, msg, time) => {
   measure(msg, time);
-});
-
-ipcMain.on('register-in-crash-handler', (event, arg) => {
-  crashHandler.registerProcess(arg.pid, arg.critical);
-});
-
-ipcMain.on('unregister-in-crash-handler', (event, arg) => {
-  crashHandler.unregisterProcess(arg.pid);
 });
 
 // Measure time between events
