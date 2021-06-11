@@ -989,7 +989,10 @@ export class StreamingService
           status: 'wrote',
           code: info.code,
         });
-        this.replayBufferFileWrite.next(obs.NodeObs.OBS_service_getLastReplay());
+        const file = obs.NodeObs.OBS_service_getLastReplay();
+        console.log('GOT REPLAY BUFFER WRITE', info);
+        console.log('obs.NodeObs.OBS_service_getLastReplay():', file);
+        this.replayBufferFileWrite.next(file);
       }
     }
 
