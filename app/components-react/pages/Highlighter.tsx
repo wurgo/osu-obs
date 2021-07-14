@@ -8,7 +8,7 @@ import ClipTrimmer from 'components-react/highlighter/ClipTrimmer';
 import { ReactSortable } from 'react-sortablejs';
 import Form from 'components-react/shared/inputs/Form';
 import isEqual from 'lodash/isEqual';
-import { SliderInput, FileInput, SwitchInput } from 'components-react/shared/inputs';
+import { SliderInput, FileInput, SwitchInput, TextInput } from 'components-react/shared/inputs';
 import { Modal, Button, Alert } from 'antd';
 import ExportModal from 'components-react/highlighter/ExportModal';
 import PreviewModal from 'components-react/highlighter/PreviewModal';
@@ -22,7 +22,7 @@ import { getBindingString } from 'components-react/shared/HotkeyBinding';
 import Animate from 'rc-animate';
 import TransitionSelector from 'components-react/highlighter/TransitionSelector';
 
-type TModal = 'trim' | 'export' | 'preview' | 'remove';
+type TModal = 'trim' | 'export' | 'preview' | 'remove' | 'twitch';
 
 export default function Highlighter() {
   const { HighlighterService, HotkeysService, UsageStatisticsService } = Services;
@@ -268,7 +268,7 @@ export default function Highlighter() {
               style={{ margin: '10px 20px 10px 0', display: 'inline-block' }}
               className="sortable-ignore"
             >
-              <AddClip />
+              <AddClip showTwitchImport={() => setShowModal('twitch')} />
             </div>
             {v.clips.map(clip => {
               return (
@@ -307,6 +307,7 @@ export default function Highlighter() {
           {inspectedClip && showModal === 'trim' && <ClipTrimmer clip={inspectedClip} />}
           {showModal === 'export' && <ExportModal close={closeModal} />}
           {showModal === 'preview' && <PreviewModal close={closeModal} />}
+          {showModal === 'twitch' && <TwitchImport />}
           {inspectedClip && showModal === 'remove' && (
             <RemoveClip close={closeModal} clip={inspectedClip} />
           )}
@@ -330,7 +331,7 @@ export default function Highlighter() {
   return getClipsView();
 }
 
-function AddClip() {
+function AddClip(p: { showTwitchImport: () => void }) {
   const { HighlighterService } = Services;
 
   async function openClips() {
@@ -361,6 +362,15 @@ function AddClip() {
         Add Clip
       </div>
       <p style={{ textAlign: 'center' }}>{'Drag & drop or click to add clips'}</p>
+      <a
+        style={{ textAlign: 'center', width: '100%', display: 'inline-block' }}
+        onClick={e => {
+          p.showTwitchImport();
+          e.stopPropagation();
+        }}
+      >
+        Or import a Twitch Clip
+      </a>
     </div>
   );
 }
@@ -388,6 +398,19 @@ function RemoveClip(p: { clip: IClip; close: () => void }) {
       >
         Remove
       </Button>
+    </div>
+  );
+}
+
+function TwitchImport() {
+  const [clipUrl, setClipUrl] = useState('');
+
+  return (
+    <div>
+      <Form>
+        <TextInput label="Twitch Clip URL" value={clipUrl} onChange={setClipUrl} />
+        <Button type="primary">Import</Button>
+      </Form>
     </div>
   );
 }

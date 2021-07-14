@@ -405,7 +405,7 @@ export class HighlighterService extends StatefulService<IHighligherState> {
       const clipsToLoad = [
         // Aero 15 test clips
         // path.join(CLIP_DIR, '2021-05-12 12-59-28.mp4'),
-        path.join(CLIP_DIR, 'Replay 2021-03-30 14-13-20.mp4'),
+        // path.join(CLIP_DIR, 'Replay 2021-03-30 14-13-20.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-13-29.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-13-41.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-13-49.mp4'),
@@ -413,7 +413,7 @@ export class HighlighterService extends StatefulService<IHighligherState> {
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-14-03.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-14-06.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-30-53.mp4'),
-        path.join(CLIP_DIR, 'Replay 2021-03-30 14-32-34.mp4'),
+        // path.join(CLIP_DIR, 'Replay 2021-03-30 14-32-34.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-34-33.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-34-48.mp4'),
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-35-03.mp4'),
@@ -424,7 +424,7 @@ export class HighlighterService extends StatefulService<IHighligherState> {
         // path.join(CLIP_DIR, 'Replay 2021-03-30 14-36-44.mp4'),
 
         // Spoken Audio
-        path.join(CLIP_DIR, '2021-06-24 13-59-58.mp4'),
+        // path.join(CLIP_DIR, '2021-06-24 13-59-58.mp4'),
         // path.join(CLIP_DIR, '2021-06-24 14-00-26.mp4'),
         // path.join(CLIP_DIR, '2021-06-24 14-00-52.mp4'),
 
