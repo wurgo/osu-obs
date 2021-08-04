@@ -468,14 +468,14 @@ export class SourcesService extends StatefulService<ISourcesState> {
   getAvailableSourcesTypesList(): IObsListOption<TSourceType>[] {
     const obsAvailableTypes = obs.InputFactory.types();
     const allowlistedTypes: IObsListOption<TSourceType>[] = [
-      { description: 'Image', value: 'image_source' },
-      { description: 'Color Source', value: 'color_source' },
+      // { description: 'Image', value: 'image_source' },
+      // { description: 'Color Source', value: 'color_source' },
       { description: 'Browser Source', value: 'browser_source' },
       { description: 'Media Source', value: 'ffmpeg_source' },
-      { description: 'Image Slide Show', value: 'slideshow' },
+      // { description: 'Image Slide Show', value: 'slideshow' },
       { description: 'Text (GDI+)', value: 'text_gdiplus' },
       { description: 'Text (FreeType 2)', value: 'text_ft2_source' },
-      { description: 'Display Capture', value: 'monitor_capture' },
+      // { description: 'Display Capture', value: 'monitor_capture' },
       { description: 'Window Capture', value: 'window_capture' },
       { description: 'Game Capture', value: 'game_capture' },
       { description: 'Video Capture Device', value: 'dshow_input' },
@@ -490,7 +490,7 @@ export class SourcesService extends StatefulService<ISourcesState> {
       { description: 'Audio Input Capture', value: 'coreaudio_input_capture' },
       { description: 'Audio Output Capture', value: 'coreaudio_output_capture' },
       { description: 'Video Capture Device', value: 'av_capture_input' },
-      { description: 'Display Capture', value: 'display_capture' },
+      // { description: 'Display Capture', value: 'display_capture' },
       { description: 'Soundtrack source', value: 'soundtrack_source' },
     ];
 
