@@ -19,8 +19,8 @@ export default function StartStreamingButton(p: { disabled?: boolean }) {
 
   const { streamingStatus, delayEnabled, delaySeconds } = useVuex(() => ({
     streamingStatus: StreamingService.state.streamingStatus,
-    delayEnabled: StreamingService.views.delayEnabled,
-    delaySeconds: StreamingService.views.delaySeconds,
+    delayEnabled: false,
+    delaySeconds: 0,
   }));
 
   const [delaySecondsRemaining, setDelayTick] = useState(delaySeconds);
@@ -166,17 +166,17 @@ function StreamButtonLabel(p: {
   }
 
   if (p.streamingStatus === EStreamingState.Starting) {
-    if (p.delayEnabled) {
-      return <>{`Starting ${p.delaySecondsRemaining}s`}</>;
-    }
+    // if (p.delayEnabled) {
+    //   return <>{`Starting ${p.delaySecondsRemaining}s`}</>;
+    // }
 
     return <>{$t('Starting')}</>;
   }
 
   if (p.streamingStatus === EStreamingState.Ending) {
-    if (p.delayEnabled) {
-      return <>{`Discard ${p.delaySecondsRemaining}s`}</>;
-    }
+    // if (p.delayEnabled) {
+    //   return <>{`Discard ${p.delaySecondsRemaining}s`}</>;
+    // }
 
     return <>{$t('Ending')}</>;
   }

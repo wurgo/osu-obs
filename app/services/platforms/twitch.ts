@@ -318,7 +318,7 @@ export class TwitchService
       this.requestTwitch({
         url: `${this.apiBase}/helix/channels?broadcaster_id=${this.twitchId}`,
         method: 'PATCH',
-        body: JSON.stringify({ game_id: gameId, title }),
+        body: JSON.stringify({ game_id: gameId }),
       }),
       this.setStreamTags(tags),
     ]);

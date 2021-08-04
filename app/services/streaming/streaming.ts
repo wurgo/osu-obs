@@ -796,11 +796,11 @@ export class StreamingService
   }
 
   get delayEnabled() {
-    return this.streamSettingsService.settings.delayEnable;
+    return false;
   }
 
   get delaySeconds() {
-    return this.streamSettingsService.settings.delaySec;
+    return 0;
   }
 
   get delaySecondsRemaining() {
