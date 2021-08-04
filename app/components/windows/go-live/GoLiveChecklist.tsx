@@ -30,7 +30,7 @@ export default class GoLiveChecklist extends TsxComponent<Props> {
   @Inject() private youtubeService: YoutubeService;
   @Inject() private twitterService: TwitterService;
   @Inject() private videoEncodingOptimizationService: VideoEncodingOptimizationService;
-  private delayEnabled = this.streamingService.delayEnabled;
+  private delayEnabled = false;
   private delaySecondsRemaining = 0;
 
   created() {

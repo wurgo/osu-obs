@@ -554,31 +554,31 @@ ipcMain.on('protocolLinkReady', () => {
 });
 
 app.on('ready', () => {
-  if (
-    !process.argv.includes('--skip-update') &&
-    (process.env.NODE_ENV === 'production' || process.env.SLOBS_FORCE_AUTO_UPDATE)
-  ) {
-    // Windows uses our custom update, Mac uses electron-updater
-    if (process.platform === 'win32') {
-      const updateInfo = {
-        baseUrl: 'https://slobs-cdn.streamlabs.com',
-        version: pjson.version,
-        exec: process.argv,
-        cwd: process.cwd(),
-        waitPids: [process.pid],
-        appDir: path.dirname(app.getPath('exe')),
-        tempDir: path.join(app.getPath('temp'), 'slobs-updater'),
-        cacheDir: app.getPath('userData'),
-        versionFileName: `${releaseChannel}.json`,
-      };
+  // if (
+  //   !process.argv.includes('--skip-update') &&
+  //   (process.env.NODE_ENV === 'production' || process.env.SLOBS_FORCE_AUTO_UPDATE)
+  // ) {
+  //   // Windows uses our custom update, Mac uses electron-updater
+  //   if (process.platform === 'win32') {
+  //     const updateInfo = {
+  //       baseUrl: 'https://slobs-cdn.streamlabs.com',
+  //       version: pjson.version,
+  //       exec: process.argv,
+  //       cwd: process.cwd(),
+  //       waitPids: [process.pid],
+  //       appDir: path.dirname(app.getPath('exe')),
+  //       tempDir: path.join(app.getPath('temp'), 'slobs-updater'),
+  //       cacheDir: app.getPath('userData'),
+  //       versionFileName: `${releaseChannel}.json`,
+  //     };
 
-      bootstrap(updateInfo, startApp, app.exit);
-    } else {
-      new Updater(startApp).run();
-    }
-  } else {
+  //     bootstrap(updateInfo, startApp, app.exit);
+  //   } else {
+  //     new Updater(startApp).run();
+  //   }
+  // } else {
     startApp();
-  }
+  // }
 });
 
 ipcMain.on('openDevTools', () => {

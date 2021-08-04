@@ -359,10 +359,10 @@ export class StreamInfoView<T extends Object> extends ViewHandler<T> {
   }
 
   get delayEnabled() {
-    return this.streamSettingsView.settings.delayEnable;
+    return false;
   }
 
   get delaySeconds() {
-    return this.streamSettingsView.settings.delaySec;
+    return 0;
   }
 }
