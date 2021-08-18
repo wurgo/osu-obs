@@ -16,6 +16,7 @@ export function TwitchEditStreamInfo(p: IPlatformComponentParams<'twitch'>) {
   }
 
   const bind = createBinding(twSettings, updatedSettings => updateSettings(updatedSettings));
+  const shouldShowTags = !p.isScheduleMode;
 
   return (
     <Form name="twitch-settings">
@@ -31,7 +32,11 @@ export function TwitchEditStreamInfo(p: IPlatformComponentParams<'twitch'>) {
           />
         }
         requiredFields={<GameSelector key="required" platform={'twitch'} {...bind.game} />}
-        optionalFields={<TwitchTagsInput key="optional" label={$t('Twitch Tags')} {...bind.tags} />}
+        optionalFields={
+          <div key="optional">
+            {shouldShowTags && <TwitchTagsInput label={$t('Twitch Tags')} {...bind.tags} />}
+          </div>
+        }
       />
     </Form>
   );

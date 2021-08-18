@@ -66,6 +66,19 @@ interface ITwitchServiceState extends IPlatformState {
   settings: ITwitchStartStreamOptions;
 }
 
+export interface ITwitchSchedulerSegment {
+  canceled_until: string;
+  category: {
+    id: string;
+    name: string;
+  };
+  end_time: string;
+  id: string;
+  is_recurring: boolean;
+  start_time: string;
+  title: string;
+}
+
 @InheritMutations()
 export class TwitchService
   extends BasePlatformService<ITwitchServiceState>
@@ -101,6 +114,7 @@ export class TwitchService
     'streamlabels',
     'themes',
     'viewerCount',
+    'stream-schedule',
   ]);
 
   authWindowOptions: Electron.BrowserWindowConstructorOptions = {
@@ -345,6 +359,15 @@ export class TwitchService
         .replace('{height}', imageSize.height.toString());
       return { id: g.id, name: g.name, image };
     })[0];
+  }
+
+  async fetchSchedule(dateFrom: number): Promise<ITwitchSchedulerSegment[]> {
+    const startTime = new Date(dateFrom).toISOString();
+    return (
+      await this.requestTwitch<{ data: { segments: ITwitchSchedulerSegment[] } }>(
+        `${this.apiBase}/helix/schedule?broadcaster_id=${this.twitchId}&start_time=${startTime}`,
+      )
+    ).data.segments;
   }
 
   get chatUrl(): string {

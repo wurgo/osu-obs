@@ -16,12 +16,14 @@ import {
   IYoutubeStartStreamOptions,
 } from '../../../services/platforms/youtube';
 import { mutation } from '../../store';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { message } from 'antd';
 import { $t } from '../../../services/i18n';
 import { IStreamError } from '../../../services/streaming/stream-error';
 import { useModule } from '../../hooks/useModule';
 import { IGoLiveSettings } from '../../../services/streaming';
+import { ITwitchSchedulerSegment } from '../../../services/platforms/twitch';
+import * as electron from 'electron';
 
 /**
  * Represents a single stream event
@@ -56,6 +58,13 @@ export interface IStreamEvent {
     destinationType: TDestinationType;
     destinationId: string;
   };
+
+  /**
+   * We need additional fields for Twitch events
+   */
+  twitch?: {
+    game?: string;
+  };
 }
 
 /**
@@ -64,6 +73,12 @@ export interface IStreamEvent {
 interface ISchedulerPlatformSettings extends Partial<Record<TPlatform, Object>> {
   youtube?: IYoutubeStartStreamOptions;
   facebook?: IFacebookStartStreamOptions;
+  twitch?: ITwitchScheduleOptions;
+}
+
+interface ITwitchScheduleOptions {
+  title: string;
+  game?: string;
 }
 
 /**
@@ -129,6 +144,7 @@ class StreamSchedulerModule {
     const defaultSettings = {
       facebook: cloneDeep(Services.FacebookService.state.settings) as IFacebookUpdateVideoOptions,
       youtube: cloneDeep(Services.YoutubeService.state.settings),
+      twitch: cloneDeep(Services.YoutubeService.state.settings) as ITwitchScheduleOptions,
     };
     defaultSettings.youtube.broadcastId = '';
     defaultSettings.facebook.liveVideoId = '';
@@ -160,8 +176,12 @@ class StreamSchedulerModule {
   private async loadEvents() {
     this.reset();
     // load fb and yt events simultaneously
-    const [fbEvents, ytEvents] = await Promise.all([this.fetchFbEvents(), this.fetchYTBEvents()]);
-    this.setEvents([...fbEvents, ...ytEvents]);
+    const [fbEvents, ytEvents, twEvents] = await Promise.all([
+      this.fetchFbEvents(),
+      this.fetchYTBEvents(),
+      this.fetchTWEvents(),
+    ]);
+    this.setEvents([...fbEvents, ...ytEvents, ...twEvents]);
   }
 
   private async fetchYTBEvents() {
@@ -169,7 +189,7 @@ class StreamSchedulerModule {
     const ytActions = Services.YoutubeService.actions;
     await ytActions.return.prepopulateInfo();
     const broadcasts = await ytActions.return.fetchBroadcasts();
-    return broadcasts.map(broadcast => convertYTBroadcastToEvent(broadcast));
+    return broadcasts.map(convertYTBroadcastToEvent);
   }
 
   private async fetchFbEvents() {
@@ -177,7 +197,17 @@ class StreamSchedulerModule {
     const fbActions = Services.FacebookService.actions;
     await fbActions.return.prepopulateInfo();
     const liveVideos = await fbActions.return.fetchAllVideos();
-    return liveVideos.map(video => convertFBLiveVideoToEvent(video));
+    return liveVideos.map(convertFBLiveVideoToEvent);
+  }
+
+  private async fetchTWEvents() {
+    if (!this.platforms.includes('twitch')) return [];
+
+    const twActions = Services.TwitchService.actions;
+    await twActions.return.prepopulateInfo();
+    const dateFrom = moment().startOf('month').toDate().valueOf();
+    const segments = await twActions.return.fetchSchedule(dateFrom);
+    return segments.map(convertTWSchedulerSegmentToEvent);
   }
 
   /**
@@ -199,6 +229,10 @@ class StreamSchedulerModule {
 
   get ytSettings(): IYoutubeStartStreamOptions {
     return getDefined(this.state.platformSettings.youtube);
+  }
+
+  get twSettings(): ITwitchScheduleOptions {
+    return getDefined(this.state.platformSettings.twitch);
   }
 
   get primaryPlatform() {
@@ -234,7 +268,7 @@ class StreamSchedulerModule {
         event.id,
       );
       this.SHOW_EDIT_EVENT_MODAL(event, ytSettings);
-    } else {
+    } else if (event.platform === 'facebook') {
       const fbDestination = getDefined(event.facebook);
       const fbSettings = await Services.FacebookService.actions.return.fetchStartStreamOptionsForVideo(
         event.id,
@@ -242,6 +276,9 @@ class StreamSchedulerModule {
         fbDestination.destinationId,
       );
       this.SHOW_EDIT_EVENT_MODAL(event, fbSettings);
+    } else if (event.platform === 'twitch') {
+      const game = getDefined(event.twitch).game;
+      this.SHOW_EDIT_EVENT_MODAL(event, { title: event.title, game });
     }
   }
 
@@ -384,10 +421,21 @@ class StreamSchedulerModule {
     this.closeModal();
   }
 
+  openTwitchScheduler() {
+    const auth = getDefined(Services.UserService.state.auth);
+    const username = getDefined(auth.platforms.twitch).username;
+    electron.remote.shell.openExternal(
+      `https://dashboard.twitch.tv/u/${username}/settings/channel/schedule`,
+    );
+  }
+
   @mutation()
   private SHOW_EDIT_EVENT_MODAL(
     event: IStreamEvent,
-    platformSettings: IYoutubeStartStreamOptions | IFacebookStartStreamOptions,
+    platformSettings:
+      | IYoutubeStartStreamOptions
+      | IFacebookStartStreamOptions
+      | ITwitchScheduleOptions,
   ) {
     this.state.selectedEventId = event.id;
     this.state.selectedPlatform = event.platform;
@@ -500,6 +548,22 @@ function convertFBLiveVideoToEvent(fbLiveVideo: IFacebookLiveVideoExtended): ISt
     facebook: {
       destinationType: fbLiveVideo.destinationType,
       destinationId: fbLiveVideo.destinationId,
+    },
+  };
+}
+
+/**
+ * Converts ITwitchSchedulerSegment to IStreamEvent
+ */
+function convertTWSchedulerSegmentToEvent(segment: ITwitchSchedulerSegment): IStreamEvent {
+  return {
+    platform: 'twitch',
+    id: segment.id,
+    date: new Date(segment.start_time).valueOf(),
+    title: segment.title,
+    status: 'scheduled',
+    twitch: {
+      game: segment.category.name,
     },
   };
 }

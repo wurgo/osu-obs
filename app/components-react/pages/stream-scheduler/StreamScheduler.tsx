@@ -10,8 +10,7 @@ import { ListInput, TimeInput } from '../../shared/inputs';
 import Form, { useForm } from '../../shared/inputs/Form';
 import { confirmAsync } from '../../modals';
 import { IStreamEvent, useStreamScheduler } from './useStreamScheduler';
-import { Services } from '../../service-provider';
-import { getDefined } from '../../../util/properties-type-guards';
+import { TwitchEditStreamInfo } from '../../windows/go-live/platforms/TwitchEditStreamInfo';
 
 /**
  * StreamScheduler page layout
@@ -66,6 +65,7 @@ function SchedulerCalendar() {
           [css.event]: true,
           [css.eventFacebook]: event.platform === 'facebook',
           [css.eventYoutube]: event.platform === 'youtube',
+          [css.eventTwitch]: event.platform === 'twitch',
         })}
         onClick={ev => {
           ev.stopPropagation();
@@ -118,6 +118,7 @@ function EventSettingsModal() {
     setTime,
     ytSettings,
     fbSettings,
+    twSettings,
     updatePlatform,
   } = useStreamScheduler();
 
@@ -186,6 +187,17 @@ function EventSettingsModal() {
               onChange={newSettings => updatePlatform('facebook', newSettings)}
             />
           )}
+
+          {/* TWITCH SETTINGS */}
+          {selectedPlatform === 'twitch' && (
+            <TwitchEditStreamInfo
+              layoutMode="singlePlatform"
+              isUpdateMode={isUpdateMode}
+              isScheduleMode={true}
+              value={twSettings}
+              onChange={newSettings => updatePlatform('twitch', newSettings)}
+            />
+          )}
         </Spin>
       </Form>
     </Modal>
@@ -203,17 +215,21 @@ function ModalButtons() {
     goLive,
     isLoading,
     primaryPlatform,
+    openTwitchScheduler,
   } = useStreamScheduler();
-  const shouldShowSave = !!selectedEvent;
-  const shouldShowSchedule = !selectedEvent;
+  const isTwitch = selectedEvent?.platform === 'twitch';
+  const shouldShowSave = !!selectedEvent && !isTwitch;
+  const shouldShowSchedule = !selectedEvent && !isTwitch;
   const shouldShowGoLive =
     selectedEvent &&
     selectedEvent.platform === primaryPlatform &&
     selectedEvent.status === 'scheduled';
 
+  const shouldShowTwitchSchedulerLink = isTwitch;
+
   // allow removing only those events which the user has not streamed to
   // removing the event with the finished stream leads to deletion of recorded video too
-  const shouldShowRemove = selectedEvent && selectedEvent.status === 'scheduled';
+  const shouldShowRemove = selectedEvent && selectedEvent.status === 'scheduled' && !isTwitch;
 
   /**
    * confirm and delete
@@ -251,6 +267,13 @@ function ModalButtons() {
         {shouldShowSchedule && (
           <Button type="primary" onClick={submit} disabled={isLoading}>
             {$t('Schedule')}
+          </Button>
+        )}
+
+        {/* TWITCH SCHEDULE BUTTON */}
+        {shouldShowTwitchSchedulerLink && (
+          <Button type="primary" onClick={openTwitchScheduler} disabled={isLoading}>
+            {$t('Edit Schedule on Twitch')}
           </Button>
         )}
       </Col>
