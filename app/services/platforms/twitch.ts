@@ -378,6 +378,20 @@ export class TwitchService
     return updateTags()(tags)(this.twitchId);
   }
 
+  async fetchClips(startTime: string) {
+    const clipsResponse = await platformAuthorizedRequest<{}>(
+      'twitch',
+      `${this.apiBase}/helix/clips?broadcaster_id=${this.userAuth.id}&first=5`,
+    );
+
+    console.log(clipsResponse);
+  }
+
+  // TODO: Remove, only used for testing
+  async fectchUserId(channel: string) {
+    await platformAuthorizedRequest<{}>('twitch', `${this.apiBase}/helix/users?login=${channel}`);
+  }
+
   async validatePollsScope() {
     const hasPollsPermission = await this.hasScope('channel:manage:polls');
     this.SET_HAS_POLLS_PERMISSION(hasPollsPermission);

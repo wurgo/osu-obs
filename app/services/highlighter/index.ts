@@ -330,6 +330,12 @@ export class HighlighterService extends StatefulService<IHighligherState> {
   @Inject() usageStatisticsService: UsageStatisticsService;
 
   /**
+   * Keep track of when this app session started so we can
+   * query Twitch clips created during this session.
+   */
+  startTime = new Date();
+
+  /**
    * A dictionary of actual clip classes.
    * These are not serializable so kept out of state.
    */
