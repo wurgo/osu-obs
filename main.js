@@ -258,28 +258,28 @@ const waitingVuexStores = [];
 let workerInitFinished = false;
 
 async function startApp() {
-  const crashHandler = require('crash-handler');
+  // const crashHandler = require('crash-handler');
   const isDevMode = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test';
   const crashHandlerLogPath = app.getPath('userData');
 
   await bundleUpdater(__dirname);
 
-  crashHandler.startCrashHandler(
-    app.getAppPath(),
-    process.env.SLOBS_VERSION,
-    isDevMode.toString(),
-    crashHandlerLogPath,
-    process.env.IPC_UUID,
-  );
-  crashHandler.registerProcess(pid, false);
+  // crashHandler.startCrashHandler(
+  //   app.getAppPath(),
+  //   process.env.SLOBS_VERSION,
+  //   isDevMode.toString(),
+  //   crashHandlerLogPath,
+  //   process.env.IPC_UUID,
+  // );
+  // crashHandler.registerProcess(pid, false);
 
-  ipcMain.on('register-in-crash-handler', (event, arg) => {
-    crashHandler.registerProcess(arg.pid, arg.critical);
-  });
+  // ipcMain.on('register-in-crash-handler', (event, arg) => {
+  //   crashHandler.registerProcess(arg.pid, arg.critical);
+  // });
 
-  ipcMain.on('unregister-in-crash-handler', (event, arg) => {
-    crashHandler.unregisterProcess(arg.pid);
-  });
+  // ipcMain.on('unregister-in-crash-handler', (event, arg) => {
+  //   crashHandler.unregisterProcess(arg.pid);
+  // });
 
   const Raven = require('raven');
 
@@ -441,7 +441,7 @@ async function startApp() {
     }
   });
 
-  if (process.env.SLOBS_PRODUCTION_DEBUG) openDevTools();
+  openDevTools();
 
   // simple messaging system for services between windows
   // WARNING! renderer windows use synchronous requests and will be frozen

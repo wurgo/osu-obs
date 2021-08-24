@@ -267,32 +267,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   I18nService.setVuei18nInstance(i18n);
 
   if (!Utils.isOneOffWindow()) {
-    ipcRenderer.send('register-in-crash-handler', { pid: process.pid, critical: false });
+    // ipcRenderer.send('register-in-crash-handler', { pid: process.pid, critical: false });
   }
 
   // The worker window can safely access services immediately
   if (Utils.isWorkerWindow()) {
+    console.log('worker init - 0');
     const windowsService: WindowsService = WindowsService.instance;
 
     // Services
     const appService: AppService = AppService.instance;
     const obsUserPluginsService: ObsUserPluginsService = ObsUserPluginsService.instance;
 
+    console.log('worker init - 1');
     // This is used for debugging
     window['obs'] = obs;
 
+    console.log('worker init - 2');
     // Host a new OBS server instance
-    obs.IPC.host(electron.remote.process.env.IPC_UUID);
-    obs.NodeObs.SetWorkingDirectory(
-      path.join(
-        electron.remote.app.getAppPath().replace('app.asar', 'app.asar.unpacked'),
-        'node_modules',
-        'obs-studio-node',
-      ),
-    );
+    // obs.IPC.host(electron.remote.process.env.IPC_UUID);
+    // obs.NodeObs.SetWorkingDirectory(
+    //   path.join(
+    //     electron.remote.app.getAppPath().replace('app.asar', 'app.asar.unpacked'),
+    //     'node_modules',
+    //     'obs-studio-node',
+    //   ),
+    // );
 
+    console.log('worker init - 3');
     await obsUserPluginsService.initialize();
 
+    console.log('worker init - 4');
     // Initialize OBS API
     const apiResult = obs.NodeObs.OBS_API_initAPI(
       'en-US',
@@ -300,11 +305,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       electron.remote.process.env.SLOBS_VERSION,
     );
 
+    console.log('worker init - 5');
     if (apiResult !== obs.EVideoCodes.Success) {
       const message = apiInitErrorResultToMessage(apiResult);
       showDialog(message);
 
-      ipcRenderer.send('unregister-in-crash-handler', { pid: process.pid });
+      // ipcRenderer.send('unregister-in-crash-handler', { pid: process.pid });
 
       obs.NodeObs.InitShutdownSequence();
       obs.IPC.disconnect();
