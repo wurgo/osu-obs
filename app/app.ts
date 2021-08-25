@@ -286,13 +286,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('worker init - 2');
     // Host a new OBS server instance
     // obs.IPC.host(electron.remote.process.env.IPC_UUID);
-    // obs.NodeObs.SetWorkingDirectory(
-    //   path.join(
-    //     electron.remote.app.getAppPath().replace('app.asar', 'app.asar.unpacked'),
-    //     'node_modules',
-    //     'obs-studio-node',
-    //   ),
-    // );
+    obs.NodeObs.SetWorkingDirectory(
+      path.join(
+        electron.remote.app.getAppPath().replace('app.asar', 'app.asar.unpacked'),
+        'node_modules',
+        'obs-studio-node',
+      ),
+    );
 
     console.log('worker init - 3');
     await obsUserPluginsService.initialize();
