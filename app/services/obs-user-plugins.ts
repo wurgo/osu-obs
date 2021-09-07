@@ -14,10 +14,15 @@ export class ObsUserPluginsService extends Service {
     // Make a best effort but don't stop SLOBS from loading
     try {
       await this.ensureDirectory(this.pluginsBaseDir);
-      await this.ensureDirectory(this.obsPluginsDir);
-      await this.ensureDirectory(this.pluginsDir);
-      await this.ensureDirectory(this.dataBaseDir);
-      await this.ensureDirectory(this.dataDir);
+      console.log(this.obsPluginsDir);
+      // await this.ensureDirectory(this.obsPluginsDir);
+      console.log(this.pluginsDir);
+      // await this.ensureDirectory(this.pluginsDir);
+      console.log(this.dataBaseDir);
+      // await this.ensureDirectory(this.dataBaseDir);
+      console.log(this.dataDir);
+      // await this.ensureDirectory(this.dataDir);
+      console.log('end');
     } catch (e: unknown) {
       console.error('Error creating plugin directories', e);
     }

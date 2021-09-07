@@ -272,18 +272,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // The worker window can safely access services immediately
   if (Utils.isWorkerWindow()) {
-    console.log('worker init - 0');
     const windowsService: WindowsService = WindowsService.instance;
 
     // Services
     const appService: AppService = AppService.instance;
     const obsUserPluginsService: ObsUserPluginsService = ObsUserPluginsService.instance;
 
-    console.log('worker init - 1');
     // This is used for debugging
     window['obs'] = obs;
 
-    console.log('worker init - 2');
     // Host a new OBS server instance
     // obs.IPC.host(electron.remote.process.env.IPC_UUID);
     obs.NodeObs.SetWorkingDirectory(
@@ -294,10 +291,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       ),
     );
 
-    console.log('worker init - 3');
     await obsUserPluginsService.initialize();
 
-    console.log('worker init - 4');
     // Initialize OBS API
     const apiResult = obs.NodeObs.OBS_API_initAPI(
       'en-US',
@@ -305,7 +300,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       electron.remote.process.env.SLOBS_VERSION,
     );
 
-    console.log('worker init - 5');
     if (apiResult !== obs.EVideoCodes.Success) {
       const message = apiInitErrorResultToMessage(apiResult);
       showDialog(message);

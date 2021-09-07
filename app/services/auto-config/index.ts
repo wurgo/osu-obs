@@ -68,9 +68,5 @@ export class AutoConfigService extends Service {
     if (progress.event === 'error') {
       obs.NodeObs.StartSetDefaultSettings();
     }
-
-    if (progress.event === 'done') {
-      obs.NodeObs.TerminateAutoConfig();
-    }
   }
 }

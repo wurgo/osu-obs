@@ -113,7 +113,6 @@ export class AppService extends StatefulService<IAppState> {
         this.SET_ERROR_ALERT(true);
       });
     }
-
     // perform several concurrent http requests
     await Promise.all([
       // We want to start this as early as possible so that any

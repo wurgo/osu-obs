@@ -179,9 +179,9 @@ export class SourcesService extends StatefulService<ISourcesState> {
   propertiesManagers: Dictionary<IActivePropertyManager> = {};
 
   protected init() {
-    obs.NodeObs.RegisterSourceCallback((objs: IObsSourceCallbackInfo[]) =>
-      this.handleSourceCallback(objs),
-    );
+    // obs.NodeObs.RegisterSourceCallback((objs: IObsSourceCallbackInfo[]) =>
+    //   this.handleSourceCallback(objs),
+    // );
 
     this.scenesService.itemRemoved.subscribe(sceneSourceModel =>
       this.onSceneItemRemovedHandler(sceneSourceModel),
